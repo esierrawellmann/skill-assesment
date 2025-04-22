@@ -1,0 +1,56 @@
+<div class="weather-container animate__animated animate__fadeIn">
+  <!-- Form section -->
+  <div class="form-section">
+    <h2 class="form-title">Anytime Weather</h2>
+
+    <input
+      class="weather-input"
+      type="text"
+      [(ngModel)]="city"
+      placeholder="Enter City Name"
+      (keydown.enter)="fetchWeather()"
+    />
+
+    <div class="unit-toggle">
+      <label><input type="radio" value="F" [(ngModel)]="unit" /> F</label>
+      <label><input type="radio" value="C" [(ngModel)]="unit" /> C</label>
+    </div>
+
+    <button class="weather-button" (click)="fetchWeather()">Enter</button>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="loading" class="spinner">
+    <img src="assets/spinner.gif" alt="Loading..." />
+  </div>
+
+  <!-- Results -->
+  <div *ngIf="weather" class="result-section animate__animated animate__fadeIn">
+    <h3 class="weather-location">{{ weather.location.name }}</h3>
+
+    <div class="current-weather">
+      <img [src]="weather.current.condition.icon" alt="Weather Icon" />
+
+      <!-- Conditional temperature display -->
+      <div *ngIf="unit === 'F'; else elseBlock" class="temperature-display animate__animated animate__fadeIn">
+        {{ weather.current.temp_f }}°{{ unit }}
+      </div>
+      <ng-template #elseBlock>
+        <p class="temperature-display"> {{ weather.current.temp_c }}°{{ unit }}</p>
+      </ng-template>
+    </div>
+
+    <label class="favorite-toggle">
+      <input type="checkbox" (change)="saveFavorite()" /> Save as Favorite
+    </label>
+
+    <!-- Forecast -->
+    <div class="forecast">
+      <div *ngFor="let day of weather.forecast.forecastday.slice(0, 5)" class="forecast-day">
+        <p>{{ day.date }}</p>
+        <img [src]="day.day.condition.icon" alt="Forecast Icon" />
+        <p>{{ day.day.avgtemp_c }}°C / {{ day.day.avgtemp_f }}°F</p>
+      </div>
+    </div>
+  </div>
+</div>
